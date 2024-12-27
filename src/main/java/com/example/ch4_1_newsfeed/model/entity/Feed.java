@@ -48,6 +48,6 @@ public class Feed extends BaseEntity {
     }
 
     public void updateFeed(String contents) {
-        this.contents = this.contents;
+        this.contents = contents;
     }
 }

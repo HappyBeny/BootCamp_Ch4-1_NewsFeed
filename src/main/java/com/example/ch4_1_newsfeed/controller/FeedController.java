@@ -54,10 +54,11 @@ public class FeedController {
      */
     @GetMapping
     public ResponseEntity<Page<FindAllFeedResponseDto>> findAllFeeds(
-        @Valid @ModelAttribute FeedPagingRequestDto dto
-        ) {
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size
+    ) {
 
-        Page<FindAllFeedResponseDto> allFeeds = feedService.findAllFeeds(dto.getPage(), dto.getSize());
+        Page<FindAllFeedResponseDto> allFeeds = feedService.findAllFeeds(page, size);
         return new ResponseEntity<>(allFeeds, HttpStatus.OK);
     }
 
@@ -70,8 +71,7 @@ public class FeedController {
      */
     @GetMapping("/{user_id}")
     public ResponseEntity<FindAllFeedsByUserIdDto> findByUserId(
-        @PathVariable(name = "user_id") @Validated @NotNull(message = "id가 포함되어야 합니다") @Positive(message = "user_id는 양의 정수여야 합니다.") Long userId,
-        @Valid @ModelAttribute FeedPagingRequestDto dto
+        @PathVariable(name = "user_id") @Validated @NotNull(message = "id가 포함되어야 합니다") @Positive(message = "user_id는 양의 정수여야 합니다.") Long userId
     ) {
 
         FindAllFeedsByUserIdDto responseDtos = feedService.findByUserId(userId);
@@ -88,8 +88,7 @@ public class FeedController {
      */
     @GetMapping("/me")
     public ResponseEntity<ProfileUserResponseDto> getMyProfile(
-            HttpSession session,
-            @Valid @ModelAttribute FeedPagingRequestDto dto
+            HttpSession session
     ){
         Long userId = (Long) session.getAttribute(SessionConst.LOGIN_USER);
         ProfileUserResponseDto myProfile = feedService.getMyProfile(userId);
@@ -135,12 +134,12 @@ public class FeedController {
      * @return
      */
     @DeleteMapping("/{feed_id}")
-    public ResponseEntity<Void> delete(
+    public ResponseEntity<String> delete(
         @PathVariable(name = "feed_id") @Validated @NotNull(message = "id가 포함되어야 합니다") @Positive(message = "id는 양의 정수여야 합니다") Long feedId
     ) {
 
         feedService.delete(feedId);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok("성공적으로 삭제되었습니다.");
     }
 }

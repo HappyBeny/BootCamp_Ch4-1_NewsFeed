@@ -110,7 +110,7 @@ public class UserController {
      * 회원 탈퇴
      */
     @DeleteMapping("/me")
-    public ResponseEntity<String> deleteUser(@Valid @ModelAttribute DeleteUserRequestDto request, HttpSession session, HttpServletResponse response) {
+    public ResponseEntity<String> deleteUser(DeleteUserRequestDto request, HttpSession session, HttpServletResponse response) {
         Long userId = (Long) session.getAttribute(SessionConst.LOGIN_USER);
         userService.deleteUser(userId, request);
 
