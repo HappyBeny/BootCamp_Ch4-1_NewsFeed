@@ -4,10 +4,7 @@ import com.example.ch4_1_newsfeed.common.SessionConst;
 import com.example.ch4_1_newsfeed.model.dto.feed.request.FeedPagingRequestDto;
 import com.example.ch4_1_newsfeed.model.dto.feed.request.FeedRequestDto;
 import com.example.ch4_1_newsfeed.model.dto.feed.request.ModifyFeedRequestDto;
-import com.example.ch4_1_newsfeed.model.dto.feed.response.FeedResponseDto;
-import com.example.ch4_1_newsfeed.model.dto.feed.response.FindAllFeedResponseDto;
-import com.example.ch4_1_newsfeed.model.dto.feed.response.FindByUserAndFeedIdResponseDto;
-import com.example.ch4_1_newsfeed.model.dto.feed.response.FindByUserIdResponseDto;
+import com.example.ch4_1_newsfeed.model.dto.feed.response.*;
 import com.example.ch4_1_newsfeed.model.dto.user.response.ProfileUserResponseDto;
 
 import com.example.ch4_1_newsfeed.service.FeedService;
@@ -72,12 +69,12 @@ public class FeedController {
      * @return
      */
     @GetMapping("/{user_id}")
-    public ResponseEntity<List> findByUserId(
+    public ResponseEntity<FindAllFeedsByUserIdDto> findByUserId(
         @PathVariable(name = "user_id") @Validated @NotNull(message = "id가 포함되어야 합니다") @Positive(message = "user_id는 양의 정수여야 합니다.") Long userId,
         @Valid @ModelAttribute FeedPagingRequestDto dto
     ) {
 
-        List<FindByUserIdResponseDto> responseDtos = feedService.findByUserId(userId, dto.getPage(), dto.getSize());
+        FindAllFeedsByUserIdDto responseDtos = feedService.findByUserId(userId);
 
         return new ResponseEntity<>(responseDtos, HttpStatus.OK);
     }
@@ -95,7 +92,7 @@ public class FeedController {
             @Valid @ModelAttribute FeedPagingRequestDto dto
     ){
         Long userId = (Long) session.getAttribute(SessionConst.LOGIN_USER);
-        ProfileUserResponseDto myProfile = feedService.getMyProfile(userId, dto.getPage(), dto.getSize());
+        ProfileUserResponseDto myProfile = feedService.getMyProfile(userId);
 
         return new ResponseEntity<>(myProfile, HttpStatus.OK);
     }
